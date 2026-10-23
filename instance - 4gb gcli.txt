@@ -1,0 +1,193 @@
+Linux instance-4gb 6.12.111+deb13-cloud-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.111-1 (2026-09-28) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+oluwamayowaawobajo@instance-4gb:~$ cp /tmp/dataset_verified.txt "$HOME/dataset.txt"
+sha256sum "$HOME/dataset.txt"
+free -h
+cat /proc/swaps
+df -h "$HOME"
+ded0e8f6a3ab4f8c2ea7b790ef43435b344b3338e4c3fe13f655af8617b0a226  /home/oluwamayowaawobajo/dataset.txt
+               total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       1.0Gi       1.3Gi       482Mi       2.2Gi       2.8Gi
+Swap:             0B          0B          0B
+Filename                                Type            Size            Used            Priority
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       9.7G  3.1G  6.1G  34% /
+oluwamayowaawobajo@instance-4gb:~$ sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo /usr/sbin/swapon /swapfile
+Setting up swapspace version 1, size = 2 GiB (2147479552 bytes)
+no label, UUID=30dbceaf-d1e3-4d7c-9637-88fab0dda3b9
+oluwamayowaawobajo@instance-4gb:~$ free -h
+cat /proc/swaps
+               total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       1.0Gi       1.8Gi       482Mi       1.7Gi       2.8Gi
+Swap:          2.0Gi          0B       2.0Gi
+Filename                                Type            Size            Used            Priority
+/swapfile                               file            2097148         0               -2
+oluwamayowaawobajo@instance-4gb:~$ mkdir -p "$HOME/sort_tmp"
+chmod 700 "$HOME/sort_tmp"
+cd "$HOME"
+oluwamayowaawobajo@instance-4gb:~$ rm -f sorted.txt
+TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run1.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+
+LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run1.txt
+-bash: /usr/bin/time: No such file or directory
+sort: open failed: sorted.txt: No such file or directory
+Verification exit code: 2
+cat: sort_time_run1.txt: No such file or directory
+oluwamayowaawobajo@instance-4gb:~$ ^C
+oluwamayowaawobajo@instance-4gb:~$ sudo apt-get update
+sudo apt-get install -y time
+Get:1 file:/etc/apt/mirrors/debian.list Mirrorlist [30 B]
+Get:2 file:/etc/apt/mirrors/debian-security.list Mirrorlist [39 B]                    
+Hit:7 https://packages.cloud.google.com/apt google-compute-engine-trixie-stable InRelease
+Hit:8 https://packages.cloud.google.com/apt cloud-sdk-trixie InRelease        
+Hit:3 https://deb.debian.org/debian trixie InRelease                          
+Hit:9 https://packages.cloud.google.com/apt google-cloud-ops-agent-trixie-2 InRelease
+Hit:4 https://deb.debian.org/debian trixie-updates InRelease
+Hit:5 https://deb.debian.org/debian trixie-backports InRelease
+Hit:6 https://deb.debian.org/debian-security trixie-security InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  time
+0 upgraded, 1 newly installed, 0 to remove and 7 not upgraded.
+Need to get 50.8 kB of archives.
+After this operation, 132 kB of additional disk space will be used.
+Get:1 file:/etc/apt/mirrors/debian.list Mirrorlist [30 B]
+Get:2 https://deb.debian.org/debian trixie/main amd64 time amd64 1.9-0.2 [50.8 kB]
+Fetched 50.8 kB in 0s (387 kB/s)
+Selecting previously unselected package time.
+(Reading database ... 62378 files and directories currently installed.)
+Preparing to unpack .../time_1.9-0.2_amd64.deb ...
+Unpacking time (1.9-0.2) ...
+Setting up time (1.9-0.2) ...
+Processing triggers for man-db (2.13.1-1) ...
+oluwamayowaawobajo@instance-4gb:~$ /usr/bin/time --version
+time (GNU Time) UNKNOWN
+Copyright (C) 2018 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by David Keppel, David MacKenzie, and Assaf Gordon.
+oluwamayowaawobajo@instance-4gb:~$ sha256sum "$HOME/dataset.txt"
+mkdir -p "$HOME/sort_tmp"
+chmod 700 "$HOME/sort_tmp"
+cd "$HOME"
+ded0e8f6a3ab4f8c2ea7b790ef43435b344b3338e4c3fe13f655af8617b0a226  /home/oluwamayowaawobajo/dataset.txt
+oluwamayowaawobajo@instance-4gb:~$ rm -f sorted.txt sort_time_run1.txt
+
+TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run1.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+
+LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run1.txt
+Verification exit code: 0
+        Command being timed: "sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt"
+        User time (seconds): 9.19
+        System time (seconds): 2.47
+        Percent of CPU this job got: 104%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:11.16
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 133056
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 3822
+        Voluntary context switches: 4638
+        Involuntary context switches: 686
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 1975440
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+oluwamayowaawobajo@instance-4gb:~$ ^C
+oluwamayowaawobajo@instance-4gb:~$ rm -f sorted.txt sort_time_run2.txt
+
+TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run2.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+
+LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run2.txt
+Verification exit code: 0
+        Command being timed: "sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt"
+        User time (seconds): 8.95
+        System time (seconds): 2.39
+        Percent of CPU this job got: 104%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.86
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 132828
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 4331
+        Voluntary context switches: 5869
+        Involuntary context switches: 680
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 1975440
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+oluwamayowaawobajo@instance-4gb:~$ ^C
+oluwamayowaawobajo@instance-4gb:~$ cd "$HOME"
+rm -f sorted.txt sort_time_run3.txt
+
+TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run3.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+
+LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run3.txt
+Verification exit code: 0
+        Command being timed: "sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt"
+        User time (seconds): 8.97
+        System time (seconds): 2.22
+        Percent of CPU this job got: 104%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.73
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 132896
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 4335
+        Voluntary context switches: 2814
+        Involuntary context switches: 636
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 1975440
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0

@@ -1,0 +1,168 @@
+Linux instance-2gb 6.1.0-53-cloud-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.187-1 (2026-09-07) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Thu Oct 22 20:57:53 2026 from 35.235.241.48
+oluwamayowaawobajo@instance-2gb:~$ hostname
+whoami
+free -h
+df -h "$HOME" /tmp
+ls -lh "$HOME/dataset.txt"
+sha256sum "$HOME/dataset.txt"
+instance-2gb
+oluwamayowaawobajo
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       464Mi       1.1Gi       560Ki       548Mi       1.5Gi
+Swap:             0B          0B          0B
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        99G  3.8G   91G   4% /
+/dev/sda1        99G  3.8G   91G   4% /
+-rw-r--r-- 1 oluwamayowaawobajo oluwamayowaawobajo 513M Oct 22 12:23 /home/oluwamayowaawobajo/dataset.txt
+0f494830925b985841967d1108d817cf7049c867f2719e43a02e4dd86614a721  /home/oluwamayowaawobajo/dataset.txt
+oluwamayowaawobajo@instance-2gb:~$ ^C
+oluwamayowaawobajo@instance-2gb:~$ ls -lh /tmp/dataset_upload.txt
+-rw-r--r-- 1 USER USER 513M Oct 22 22:47 /tmp/dataset_upload.txt
+oluwamayowaawobajo@instance-2gb:~$ cp /tmp/dataset_upload.txt "$HOME/dataset.txt"
+oluwamayowaawobajo@instance-2gb:~$ ls -lh "$HOME/dataset.txt"
+sha256sum "$HOME/dataset.txt"
+-rw-r--r-- 1 oluwamayowaawobajo oluwamayowaawobajo 513M Oct 22 22:57 /home/oluwamayowaawobajo/dataset.txt
+0f494830925b985841967d1108d817cf7049c867f2719e43a02e4dd86614a721  /home/oluwamayowaawobajo/dataset.txt
+oluwamayowaawobajo@instance-2gb:~$ ^C
+oluwamayowaawobajo@instance-2gb:~$ cp /tmp/dataset_verified.txt "$HOME/dataset.txt"
+sha256sum "$HOME/dataset.txt"
+ls -lh "$HOME/dataset.txt"
+ded0e8f6a3ab4f8c2ea7b790ef43435b344b3338e4c3fe13f655af8617b0a226  /home/oluwamayowaawobajo/dataset.txt
+-rw-r--r-- 1 oluwamayowaawobajo oluwamayowaawobajo 483M Oct 22 23:25 /home/oluwamayowaawobajo/dataset.txt
+oluwamayowaawobajo@instance-2gb:~$ ^C
+oluwamayowaawobajo@instance-2gb:~$ free -h
+cat /proc/swaps
+df -h "$HOME" /tmp
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       477Mi       143Mi       552Ki       1.5Gi       1.5Gi
+Swap:             0B          0B          0B
+Filename                                Type            Size            Used            Priority
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        99G  4.7G   90G   5% /
+/dev/sda1        99G  4.7G   90G   5% /
+oluwamayowaawobajo@instance-2gb:~$ ls -lh /swapfile 2>/dev/null
+oluwamayowaawobajo@instance-2gb:~$ free -h
+cat /proc/swaps
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       494Mi       527Mi       552Ki       1.1Gi       1.4Gi
+Swap:             0B          0B          0B
+Filename                                Type            Size            Used            Priority
+oluwamayowaawobajo@instance-2gb:~$ ^C
+oluwamayowaawobajo@instance-2gb:~$ sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo /usr/sbin/swapon /swapfile
+Setting up swapspace version 1, size = 2 GiB (2147479552 bytes)
+no label, UUID=eb97b28f-4ae4-4608-a095-8cd442ada340
+oluwamayowaawobajo@instance-2gb:~$ mkdir -p "$HOME/sort_tmp"
+chmod 700 "$HOME/sort_tmp"
+cd "$HOME"
+rm -f sorted.txt sort_time_run*.txt
+oluwamayowaawobajo@instance-2gb:~$ TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run1.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+oluwamayowaawobajo@instance-2gb:~$ LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run1.txt
+Verification exit code: 0
+        Command being timed: "sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt"
+        User time (seconds): 10.38
+        System time (seconds): 3.50
+        Percent of CPU this job got: 92%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:15.04
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 132904
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 4839
+        Voluntary context switches: 5266
+        Involuntary context switches: 1116
+        Swaps: 0
+        File system inputs: 1142736
+        File system outputs: 1975440
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+oluwamayowaawobajo@instance-2gb:~$ ^C
+oluwamayowaawobajo@instance-2gb:~$ cd "$HOME"
+rm -f sorted.txt
+
+TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run2.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+
+LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run2.txt
+Verification exit code: 0
+        Command being timed: "sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt"
+        User time (seconds): 9.88
+        System time (seconds): 2.04
+        Percent of CPU this job got: 97%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:12.23
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 132924
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 3818
+        Voluntary context switches: 3011
+        Involuntary context switches: 776
+        Swaps: 0
+        File system inputs: 70344
+        File system outputs: 1975440
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+oluwamayowaawobajo@instance-2gb:~$ ^C
+oluwamayowaawobajo@instance-2gb:~$ cd "$HOME"
+rm -f sorted.txt
+
+TMPDIR="$HOME/sort_tmp" LC_ALL=C \
+/usr/bin/time -v -o sort_time_run3.txt \
+sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt
+
+LC_ALL=C sort -c -t, -k1,1 sorted.txt
+echo "Verification exit code: $?"
+cat sort_time_run3.txt
+Verification exit code: 0
+        Command being timed: "sort -t, -k1,1 -S 128M dataset.txt -o sorted.txt"
+        User time (seconds): 10.59
+        System time (seconds): 2.12
+        Percent of CPU this job got: 85%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:14.89
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 132844
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 6
+        Minor (reclaiming a frame) page faults: 3820
+        Voluntary context switches: 2842
+        Involuntary context switches: 1877
+        Swaps: 0
+        File system inputs: 454264
+        File system outputs: 1975440
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
